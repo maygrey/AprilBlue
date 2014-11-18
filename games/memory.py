@@ -11,8 +11,11 @@ import random
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-DECK = range(0,8) + range(0,8)
-EXPOSED = []
+from memorygraph import MemoryMainWindow 
+from memorymodel import *
+
+#DECK = range(0,8) + range(0,8)
+DECK = []
 STATE = 0
 PAIR =[]
 
@@ -22,18 +25,20 @@ def new_game():
     random.shuffle(DECK)
     STATE = 0
     for i in range(16):
-        EXPOSED.append(False)
-    
+        MemoryCard card(False, i)
+        DECK.append()
+
+
 #define event handlers
 def mouseclick(pos):
-    """
+    '''
     Game logic: 
     pos is a tuple with the x and y of a position
     pair is the ith (index) of the flipped cards
     State 0, initial, no cards flipped. State 1: 1 card flipped. State 2: 2 cards flipped
     EXPOSED is the list of card states True/False flipped
     When STATE changes from 1 to 2 the game logic compares both cards
-    """
+    '''
     intpos = int(pos[1]/100)
     global STATE
     if STATE == 0:
@@ -58,29 +63,25 @@ def mouseclick(pos):
             if(DECK[PAIR[0]] != DECK[PAIR[1]]):
                 EXPOSED[PAIR[0]] = False
                 EXPOSED[PAIR[1]] = False
-
     else:
         #TODO
         STATE = 1
 
-    pass
 
 def draw(canvas):
-    pass
+    for i in range(16):
+        #pintar carta ith
+        pass
 
 if __name__ == '__main__':
     
     qt_app = QApplication(sys.argv)
-
-    widget = QWidget()
-    widget.setWindowTitle('Memory Game')
-    label = QLabel('Select two cards',widget)
-    widget.setMinimumSize(QSize(800, 300))
-    button = QPushButton('reset', widget)
-    button.show()
-    label.show() 
-    widget.show()
-
+    game = MemoryMainWindow()
+    new_game()
+    game.run()
+    
+    qt_app.exec_()
+"""
     print(DECK)
     new_game()
     print(DECK)
@@ -89,6 +90,4 @@ if __name__ == '__main__':
     position = (530,120)
     mouseclick(position)
     # Run the application's event loop
-    qt_app.exec_()
-
-    pass
+    """
